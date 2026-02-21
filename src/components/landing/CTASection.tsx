@@ -11,7 +11,7 @@ const CTASection = () => {
             Ready to remove backgrounds?
           </h2>
           <p className="mb-8 text-muted-foreground">
-            Join thousands of creators using SnapCut AI for instant, professional results.
+            Join thousands of creators using AutoCut AI for instant, professional results.
           </p>
           <Button variant="hero" size="lg" className="text-base" asChild>
             <Link to="/register">

@@ -31,12 +31,12 @@ const Footer = () => {
           <div>
             <h3 className="mb-3 text-sm font-semibold">Support</h3>
             <div className="flex flex-col gap-2">
-              <a href="mailto:support@snapcut.ai" className="text-sm text-muted-foreground hover:text-foreground">support@snapcut.ai</a>
+              <a href="mailto:support@autocut.ai" className="text-sm text-muted-foreground hover:text-foreground">support@autocut.ai</a>
             </div>
           </div>
         </div>
         <div className="mt-10 border-t border-border/50 pt-6 text-center text-xs text-muted-foreground">
-          © {new Date().getFullYear()} SnapCut AI. All rights reserved.
+          © {new Date().getFullYear()} AutoCut AI. All rights reserved.
         </div>
       </div>
     </footer>
