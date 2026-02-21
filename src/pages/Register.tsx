@@ -17,7 +17,7 @@ const Register = () => {
       <div className="container flex min-h-screen items-center justify-center pt-16">
         <div className="glass-card mx-auto w-full max-w-sm rounded-2xl p-8">
           <div className="mb-6 text-center">
-            <img src={logo} alt="SnapCut AI" className="mx-auto mb-4 h-12 w-12 rounded-lg" />
+            <img src={logo} alt="AutoCut AI" className="mx-auto mb-4 h-12 w-12 rounded-lg" />
             <h1 className="text-xl font-bold">Create your account</h1>
             <p className="text-sm text-muted-foreground">Start removing backgrounds for free</p>
           </div>
