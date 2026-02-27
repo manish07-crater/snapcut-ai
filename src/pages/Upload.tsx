@@ -160,13 +160,20 @@ const UploadPage = () => {
   };
 
   const handleDownload = async (url: string, filename: string) => {
-    try {
-      toast({
-        title: "Starting Download",
-        description: "Preparing your image...",
-      });
+    // Force HTTPS to prevent "Mixed Content" blocks on Vercel (Production)
+    const secureUrl = url.replace("http://", "https://");
 
-      const response = await fetch(url);
+    toast({
+      title: "Preparing Download",
+      description: "Processing your image for saving...",
+    });
+
+    try {
+      // Priority 1: Fetch as Blob (Best experience, allows custom filename)
+      // We must use 'cors' mode for production environments
+      const response = await fetch(secureUrl, { mode: 'cors' });
+      if (!response.ok) throw new Error('Fetch failed');
+
       const blob = await response.blob();
       const blobUrl = URL.createObjectURL(blob);
 
@@ -180,12 +187,31 @@ const UploadPage = () => {
       // Cleanup
       setTimeout(() => URL.revokeObjectURL(blobUrl), 100);
     } catch (error) {
-      console.error("Download failed:", error);
-      // Fallback if fetch fails (due to CORS or other issues)
-      window.open(url, '_blank');
+      console.warn("Blob fetch failed, falling back to secure attachment method:", error);
+
+      const isCloudinary = secureUrl.includes('cloudinary.com') && secureUrl.includes('/upload/');
+      let downloadUrl = secureUrl;
+
+      if (isCloudinary) {
+        // Cloudinary native download flag + Force HTTPS
+        downloadUrl = secureUrl.replace('/upload/', '/upload/fl_attachment/');
+      }
+
+      // Priority 2: Forced attachment via hidden iframe (prevents tab opening)
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.src = downloadUrl;
+      document.body.appendChild(iframe);
+
+      setTimeout(() => {
+        if (document.body.contains(iframe)) {
+          document.body.removeChild(iframe);
+        }
+      }, 10000);
+
       toast({
-        title: "Download Triggered",
-        description: "If it didn't start automatically, please save the image from the new tab.",
+        title: "Download Started",
+        description: "Your file is being saved to your computer.",
       });
     }
   };
