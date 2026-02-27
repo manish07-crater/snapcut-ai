@@ -1,8 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 @layer base {
   :root {
@@ -61,8 +60,18 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    @apply bg-background text-foreground font-sans antialiased overflow-x-hidden;
     font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  /* Animated background mask */
+  .bg-mesh {
+    background-color: hsla(222, 47%, 3%, 1);
+    background-image:
+      radial-gradient(at 0% 0%, hsla(201, 100%, 53%, 0.15) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, hsla(270, 70%, 72%, 0.15) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, hsla(187, 80%, 53%, 0.1) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, hsla(201, 100%, 53%, 0.1) 0px, transparent 50%);
   }
 }
 
@@ -95,5 +104,50 @@
   .neon-border {
     border: 1px solid hsl(201 100% 53% / 0.3);
     box-shadow: inset 0 0 20px hsl(201 100% 53% / 0.05), var(--glow-primary);
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  @keyframes float {
+
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+
+  .shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .shimmer::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg,
+        transparent,
+        rgba(255, 255, 255, 0.1),
+        transparent);
+    animation: shimmer 3s infinite;
+  }
+
+  @keyframes shimmer {
+    0% {
+      left: -100%;
+    }
+
+    100% {
+      left: 200%;
+    }
   }
 }

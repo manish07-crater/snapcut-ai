@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Navbar from "@/components/Navbar";
-import logo from "@/assets/logo.png";
+import { Sparkles } from "lucide-react";
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -12,14 +12,16 @@ const Register = () => {
   const [name, setName] = useState("");
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-mesh">
       <Navbar />
       <div className="container flex min-h-screen items-center justify-center pt-16">
-        <div className="glass-card mx-auto w-full max-w-sm rounded-2xl p-8">
+        <div className="glass-card mx-auto w-full max-w-sm rounded-[2rem] p-8 md:p-10 border-white/10 shadow-2xl">
           <div className="mb-6 text-center">
-            <img src={logo} alt="AutoCut AI" className="mx-auto mb-4 h-12 w-12 rounded-lg" />
-            <h1 className="text-xl font-bold">Create your account</h1>
-            <p className="text-sm text-muted-foreground">Start removing backgrounds for free</p>
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary glow-primary">
+              <Sparkles className="h-8 w-8" />
+            </div>
+            <h1 className="text-3xl font-black tracking-tight">Join the future</h1>
+            <p className="text-sm text-muted-foreground font-medium mt-1">Create your SnapCut Pro AI account</p>
           </div>
 
           <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
