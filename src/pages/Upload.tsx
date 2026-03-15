@@ -116,11 +116,7 @@ const UploadPage = () => {
 
     try {
       // Use local machine-learning background removal instead of the dead remote server
-      // Explicit public path to the imgly CDN so Vercel does not block loading WASM/model assets
-      const config = {
-        publicPath: "https://static.imgly.com/@imgly/background-removal-data/1.7.0/dist/"
-      };
-      const imageBlob = await removeBackground(file, config);
+      const imageBlob = await removeBackground(file);
       const url = URL.createObjectURL(imageBlob);
 
       setProcessedPreview(url);
@@ -139,11 +135,11 @@ const UploadPage = () => {
         description: "Your image has been processed and saved to history.",
         variant: "default"
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error processing image:", error);
       toast({
         title: "Processing Failed",
-        description: "There was an error while removing the background. Please try again.",
+        description: `Error: ${error?.message || "There was an error while removing the background."} Please try again.`,
         variant: "destructive"
       });
     } finally {
