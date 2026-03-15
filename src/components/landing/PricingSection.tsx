@@ -2,6 +2,8 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Check, Sparkles, Star } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { initializeRazorpay, createPaymentOptions } from "@/lib/razorpay";
 
 const plans = [
   {
@@ -37,8 +39,31 @@ const plans = [
 ];
 
 const PricingSection = () => {
+  const { toast } = useToast();
+
+  const handlePayment = (plan: typeof plans[0]) => {
+    if (plan.price === "₹0") return;
+
+    // Convert price string like "₹499" to number 499
+    const amount = parseInt(plan.price.replace("₹", ""));
+
+    const options = createPaymentOptions(
+      amount,
+      plan.name,
+      plan.description,
+      (response: any) => {
+        toast({
+          title: "Payment Successful! 🎉",
+          description: `Welcome to ${plan.name}! Your transaction ID is ${response.razorpay_payment_id}`,
+        });
+      }
+    );
+
+    initializeRazorpay(options);
+  };
+
   return (
-    <section className="relative py-32 overflow-hidden">
+    <section id="pricing" className="relative py-32 overflow-hidden">
       {/* Background Orbs */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] -z-10" />
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[120px] -z-10" />
@@ -71,8 +96,8 @@ const PricingSection = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
               className={`relative flex flex-col rounded-[2rem] p-8 transition-all duration-500 hover:-translate-y-2 border border-white/10 ${plan.highlighted
-                  ? "neon-border bg-card shadow-[0_0_50px_rgba(3,169,244,0.15)]"
-                  : "glass-card hover:bg-white/10"
+                ? "neon-border bg-card shadow-[0_0_50px_rgba(3,169,244,0.15)]"
+                : "glass-card hover:bg-white/10"
                 }`}
             >
               {plan.highlighted && (
@@ -82,24 +107,35 @@ const PricingSection = () => {
                 </div>
               )}
 
-              <div className="mb-8">
+              <div className="mb-8 text-left">
                 <h3 className="text-2xl font-black mb-2">{plan.name}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{plan.description}</p>
               </div>
 
-              <div className="mb-8 items-baseline flex gap-1">
+              <div className="mb-8 items-baseline flex gap-1 text-left">
                 <span className="text-5xl font-black tracking-tighter">{plan.price}</span>
                 <span className="text-muted-foreground font-semibold">{plan.period}</span>
               </div>
 
-              <Button
-                variant={plan.highlighted ? "hero" : "hero-outline"}
-                size="xl"
-                className="mb-8 w-full font-black rounded-2xl"
-                asChild
-              >
-                <Link to="/register">{plan.cta}</Link>
-              </Button>
+              {plan.price === "₹0" ? (
+                <Button
+                  variant="hero-outline"
+                  size="xl"
+                  className="mb-8 w-full font-black rounded-2xl"
+                  asChild
+                >
+                  <Link to="/register">{plan.cta}</Link>
+                </Button>
+              ) : (
+                <Button
+                  variant={plan.highlighted ? "hero" : "hero-outline"}
+                  size="xl"
+                  className="mb-8 w-full font-black rounded-2xl"
+                  onClick={() => handlePayment(plan)}
+                >
+                  {plan.cta}
+                </Button>
+              )}
 
               <div className="space-y-4">
                 <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Included Features</p>

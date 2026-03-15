@@ -48,7 +48,7 @@ const features = [
 
 const FeaturesSection = () => {
   return (
-    <section className="relative py-32 overflow-hidden">
+    <section id="features" className="relative py-32 overflow-hidden">
       {/* Background decoration */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[150px] -z-10" />
 
@@ -64,7 +64,7 @@ const FeaturesSection = () => {
             Core Capabilities
           </motion.div>
           <h2 className="mb-6 text-4xl font-black md:text-5xl">
-            Why choose <span className="gradient-text">SnapCut AI</span>?
+            Why choose <span className="gradient-text">Snapcut AI</span>?
           </h2>
           <p className="text-xl text-muted-foreground leading-relaxed">
             We provide professional-grade AI tools that handle complex edges like hair and fur with unmatched precision.

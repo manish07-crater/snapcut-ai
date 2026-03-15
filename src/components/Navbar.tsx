@@ -17,8 +17,8 @@ const Navbar = () => {
               <Sparkles className="h-5 w-5" />
             </div>
             <span className="text-xl font-black tracking-tighter">
-              Snap<span className="gradient-text">Cut</span>{" "}
-              <span className="ml-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary uppercase border border-primary/20">Pro AI</span>
+              Snap<span className="gradient-text">cut</span> AI{" "}
+              <Link to="/pricing" className="ml-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary uppercase border border-primary/20 hover:bg-primary/20 transition-colors pointer-events-auto">Pro</Link>
             </span>
           </Link>
 

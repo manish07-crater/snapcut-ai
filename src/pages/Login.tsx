@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import { Sparkles } from "lucide-react";
 
 const Login = () => {
@@ -20,7 +21,7 @@ const Login = () => {
               <Sparkles className="h-8 w-8" />
             </div>
             <h1 className="text-3xl font-black tracking-tight">Welcome back</h1>
-            <p className="text-sm text-muted-foreground font-medium mt-1">Sign in to SnapCut Pro AI</p>
+            <p className="text-sm text-muted-foreground font-medium mt-1">Sign in to Snapcut AI</p>
           </div>
 
           <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
@@ -54,6 +55,7 @@ const Login = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };
