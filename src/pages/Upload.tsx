@@ -3,9 +3,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Upload, X, Download, Sparkles, Image as ImageIcon, Zap, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { History, Clock, Trash2 } from "lucide-react";
+import { removeBackground } from "@imgly/background-removal";
 
 type HistoryItem = {
   id: string;
@@ -113,40 +115,30 @@ const UploadPage = () => {
     setProcessedPreview(null);
 
     try {
-      const response = await fetch("https://manishpandey07.app.n8n.cloud/webhook/remove-background", {
-        method: "POST",
-        headers: {
-          "Content-Type": file.type,
-        },
-        body: file,
+      // Use local machine-learning background removal instead of the dead remote server
+      // Explicit public path to the imgly CDN so Vercel does not block loading WASM/model assets
+      const config = {
+        publicPath: "https://static.imgly.com/@imgly/background-removal-data/1.7.0/dist/"
+      };
+      const imageBlob = await removeBackground(file, config);
+      const url = URL.createObjectURL(imageBlob);
+
+      setProcessedPreview(url);
+
+      // Save to history
+      const newItem: HistoryItem = {
+        id: Date.now().toString(),
+        originalName: file.name,
+        processedUrl: url,
+        timestamp: Date.now(),
+      };
+      saveToHistory(newItem);
+
+      toast({
+        title: "Magic Complete! ✨",
+        description: "Your image has been processed and saved to history.",
+        variant: "default"
       });
-
-      if (!response.ok) {
-        throw new Error("Failed to process image");
-      }
-
-      const data = await response.json();
-
-      if (data && data.url) {
-        setProcessedPreview(data.url);
-
-        // Save to history
-        const newItem: HistoryItem = {
-          id: Date.now().toString(),
-          originalName: file.name,
-          processedUrl: data.url,
-          timestamp: Date.now(),
-        };
-        saveToHistory(newItem);
-
-        toast({
-          title: "Magic Complete! ✨",
-          description: "Your image has been processed and saved to history.",
-          variant: "default"
-        });
-      } else {
-        throw new Error("Invalid response format");
-      }
     } catch (error) {
       console.error("Error processing image:", error);
       toast({
@@ -374,7 +366,7 @@ const UploadPage = () => {
                   <p className="text-muted-foreground">Access your previously processed images anytime.</p>
                 </div>
                 {history.length > 0 && (
-                  <Button variant="destructive" variant="outline" className="border-red-500/50 text-red-500 hover:bg-red-500/10" onClick={clearHistory}>
+                  <Button variant="outline" className="border-red-500/50 text-red-500 hover:bg-red-500/10" onClick={clearHistory}>
                     <Trash2 className="h-4 w-4 mr-2" />
                     Clear History
                   </Button>
@@ -432,6 +424,7 @@ const UploadPage = () => {
           </Tabs>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };
