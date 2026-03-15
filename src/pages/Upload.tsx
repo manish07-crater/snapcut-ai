@@ -28,12 +28,18 @@ const UploadPage = () => {
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const { toast } = useToast();
 
-  // Load history from localStorage
+  // Load history from localStorage and preload ML models
   useEffect(() => {
     const savedHistory = localStorage.getItem("snapcut_history");
     if (savedHistory) {
       setHistory(JSON.parse(savedHistory));
     }
+
+    // Preload models in background without blocking UI
+    import("@imgly/background-removal").then(({ preload }) => {
+      console.log("Preloading AI models...");
+      preload().catch(() => console.log("Silent optional preload fail"));
+    });
   }, []);
 
   // Save history to localStorage
