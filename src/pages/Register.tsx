@@ -62,7 +62,15 @@ const Register = () => {
           // Here you would typically call your backend to finalize registration
         }
       );
-      initializeRazorpay(options);
+      initializeRazorpay(options).then((res: any) => {
+        if (res && res.success === false) {
+          toast({
+            title: "Payment Gateway Error",
+            description: res.error || "Could not launch Razorpay. Please turn off Adblockers or check your connection.",
+            variant: "destructive",
+          });
+        }
+      });
     } else {
       toast({
         title: "Account Created! ✨",

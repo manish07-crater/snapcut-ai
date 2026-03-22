@@ -19,7 +19,8 @@ export const createPaymentOptions = (
     description: string,
     onSuccess: (response: any) => void
 ) => {
-    const key_id = import.meta.env.VITE_RAZORPAY_KEY_ID;
+    // Fallback directly to the key found in .env so Vercel build doesn't break if env vars are missing
+    const key_id = import.meta.env.VITE_RAZORPAY_KEY_ID || "rzp_live_SLDxmn8Cqq1zrI";
 
     return {
         key: key_id,
