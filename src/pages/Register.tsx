@@ -99,7 +99,7 @@ const Register = () => {
             </TabsList>
           </Tabs>
 
-          <form className="space-y-4" onSubmit={handleRegister}>
+          <form className="space-y-4" onSubmit={handleRegister} noValidate>
             <div className="space-y-2">
               <Label htmlFor="name">Full Name</Label>
               <Input id="name" placeholder="John Doe" value={name} onChange={(e) => setName(e.target.value)} required className="h-12 bg-white/5" />
