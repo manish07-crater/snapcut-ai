@@ -7,7 +7,7 @@ import { useEffect } from "react";
 
 // Page Imports
 import Index from "./pages/Index";
-import Upload from "./pages/Upload";
+import Dashboard from "./pages/Dashboard";
 import Pricing from "./pages/Pricing";
 import Features from "./pages/Features";
 import Login from "./pages/Login";
@@ -46,7 +46,8 @@ function App() {
           <ScrollToTop />
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/upload" element={<Upload />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/upload" element={<Navigate to="/dashboard" replace />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/features" element={<Features />} />
             <Route path="/login" element={<Login />} />

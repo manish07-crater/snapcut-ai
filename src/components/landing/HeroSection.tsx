@@ -43,7 +43,7 @@ const HeroSection = () => {
 
             <div className="flex flex-wrap gap-4">
               <Button size="lg" className="h-14 px-8 text-lg font-bold gradient-cta hover:opacity-90 transition-all rounded-xl glow-primary" asChild>
-                <Link to="/upload">
+                <Link to="/dashboard">
                   <Upload className="mr-2 h-5 w-5" />
                   Try it Free
                 </Link>

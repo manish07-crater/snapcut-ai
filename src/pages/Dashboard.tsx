@@ -1,12 +1,11 @@
 import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Upload, X, Download, Sparkles, Image as ImageIcon, Zap, AlertCircle } from "lucide-react";
+import { Upload, X, Download, Sparkles, Image as ImageIcon, Zap, AlertCircle, History, Clock, Trash2, CreditCard, Key, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { History, Clock, Trash2 } from "lucide-react";
 import { removeBackground } from "@imgly/background-removal";
 
 type HistoryItem = {
@@ -19,7 +18,7 @@ type HistoryItem = {
 const MAX_SIZE = 10 * 1024 * 1024;
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
-const UploadPage = () => {
+const Dashboard = () => {
   const [dragOver, setDragOver] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -227,20 +226,32 @@ const UploadPage = () => {
       <div className="container pt-32 pb-16 relative z-10 text-center">
         <div className="mx-auto max-w-5xl">
           <Tabs defaultValue="upload" className="w-full">
-            <div className="flex justify-center mb-12">
-              <TabsList className="bg-white/5 backdrop-blur-md border border-white/10 p-1 h-14 rounded-2xl">
-                <TabsTrigger value="upload" className="px-8 flex items-center gap-2 text-lg font-bold data-[state=active]:bg-primary data-[state=active]:text-white rounded-xl transition-all">
-                  <Upload className="h-5 w-5" />
-                  Upload
+            <div className="flex justify-center mb-12 overflow-x-auto pb-4 -mb-4">
+              <TabsList className="bg-white/5 backdrop-blur-md border border-white/10 p-1 h-14 rounded-2xl flex-shrink-0">
+                <TabsTrigger value="upload" className="px-6 md:px-8 flex items-center gap-2 text-sm md:text-lg font-bold data-[state=active]:bg-primary data-[state=active]:text-white rounded-xl transition-all">
+                  <Upload className="h-4 w-4 md:h-5 md:w-5" />
+                  <span className="hidden sm:inline">Upload</span>
                 </TabsTrigger>
-                <TabsTrigger value="history" className="px-8 flex items-center gap-2 text-lg font-bold data-[state=active]:bg-primary data-[state=active]:text-white rounded-xl transition-all">
-                  <History className="h-5 w-5" />
-                  History
+                <TabsTrigger value="history" className="px-6 md:px-8 flex items-center gap-2 text-sm md:text-lg font-bold data-[state=active]:bg-primary data-[state=active]:text-white rounded-xl transition-all">
+                  <History className="h-4 w-4 md:h-5 md:w-5" />
+                  <span className="hidden sm:inline">History</span>
                   {history.length > 0 && (
-                    <span className="ml-1 px-2 py-0.5 text-xs bg-white text-primary rounded-full">
+                    <span className="ml-1 px-2 py-0.5 text-[10px] md:text-xs bg-white text-primary rounded-full">
                       {history.length}
                     </span>
                   )}
+                </TabsTrigger>
+                <TabsTrigger value="billing" className="px-6 md:px-8 flex items-center gap-2 text-sm md:text-lg font-bold data-[state=active]:bg-primary data-[state=active]:text-white rounded-xl transition-all">
+                  <CreditCard className="h-4 w-4 md:h-5 md:w-5" />
+                  <span className="hidden sm:inline">Billing</span>
+                </TabsTrigger>
+                <TabsTrigger value="apikeys" className="px-6 md:px-8 flex items-center gap-2 text-sm md:text-lg font-bold data-[state=active]:bg-primary data-[state=active]:text-white rounded-xl transition-all">
+                  <Key className="h-4 w-4 md:h-5 md:w-5" />
+                  <span className="hidden lg:inline">API Keys</span>
+                </TabsTrigger>
+                <TabsTrigger value="settings" className="px-6 md:px-8 flex items-center gap-2 text-sm md:text-lg font-bold data-[state=active]:bg-primary data-[state=active]:text-white rounded-xl transition-all">
+                  <Settings className="h-4 w-4 md:h-5 md:w-5" />
+                  <span className="hidden lg:inline">Settings</span>
                 </TabsTrigger>
               </TabsList>
             </div>
@@ -423,6 +434,39 @@ const UploadPage = () => {
                 </div>
               )}
             </TabsContent>
+
+            <TabsContent value="billing" className="mt-0 outline-none">
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="p-16 md:p-24 rounded-[2.5rem] glass-card border border-white/10 flex flex-col items-center justify-center text-center">
+                 <div className="w-20 h-20 rounded-3xl bg-primary/10 flex items-center justify-center mb-6">
+                   <CreditCard className="h-10 w-10 text-primary" />
+                 </div>
+                 <h2 className="text-3xl font-black mb-2">Billing & Plans</h2>
+                 <p className="text-muted-foreground max-w-md mx-auto mb-8">Manage your subscription, view payment history, and download invoices here.</p>
+                 <Button variant="hero" size="xl" className="rounded-2xl font-bold px-10">Upgrade to Pro Workspace</Button>
+              </motion.div>
+            </TabsContent>
+
+            <TabsContent value="apikeys" className="mt-0 outline-none">
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="p-16 md:p-24 rounded-[2.5rem] glass-card border border-white/10 flex flex-col items-center justify-center text-center">
+                 <div className="w-20 h-20 rounded-3xl bg-white/5 flex items-center justify-center mb-6">
+                   <Key className="h-10 w-10 text-muted-foreground" />
+                 </div>
+                 <h2 className="text-3xl font-black mb-2">Developer API</h2>
+                 <p className="text-muted-foreground max-w-md mx-auto mb-8">Generate API keys to integrate Snapcut AI background removal directly into your own applications.</p>
+                 <Button variant="outline" size="xl" className="rounded-2xl font-bold px-8 border-white/10 bg-white/5">Generate New Key</Button>
+              </motion.div>
+            </TabsContent>
+
+            <TabsContent value="settings" className="mt-0 outline-none">
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="p-16 md:p-24 rounded-[2.5rem] glass-card border border-white/10 flex flex-col items-center justify-center text-center">
+                 <div className="w-20 h-20 rounded-3xl bg-white/5 flex items-center justify-center mb-6">
+                   <Settings className="h-10 w-10 text-muted-foreground" />
+                 </div>
+                 <h2 className="text-3xl font-black mb-2">Account Settings</h2>
+                 <p className="text-muted-foreground max-w-md mx-auto mb-8">Update your personal information, manage email preferences, and configure workplace security.</p>
+              </motion.div>
+            </TabsContent>
+
           </Tabs>
         </div>
       </div>
@@ -431,4 +475,4 @@ const UploadPage = () => {
   );
 };
 
-export default UploadPage;
+export default Dashboard;
