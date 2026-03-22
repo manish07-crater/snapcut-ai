@@ -21,6 +21,34 @@ const Register = () => {
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Strict validation before payment or registration
+    if (!name.trim() || !email.trim() || !password.trim()) {
+      toast({
+        title: "Validation Error",
+        description: "Please fill in all details before proceeding.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      toast({
+        title: "Invalid Email",
+        description: "Please enter a valid email address.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (password.length < 6) {
+      toast({
+        title: "Weak Password",
+        description: "Password must be at least 6 characters long.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (plan === "pro") {
       const options = createPaymentOptions(
         499,
