@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,10 +11,11 @@ import { initializeRazorpay, createPaymentOptions } from "@/lib/razorpay";
 import { useToast } from "@/hooks/use-toast";
 
 const Register = () => {
+  const location = useLocation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const [plan, setPlan] = useState("free");
+  const [plan, setPlan] = useState(location.state?.defaultPlan === "pro" ? "pro" : "free");
   const { toast } = useToast();
 
   const handleRegister = (e: React.FormEvent) => {
@@ -63,7 +64,7 @@ const Register = () => {
             </p>
           </div>
 
-          <Tabs defaultValue="free" className="mb-8" onValueChange={setPlan}>
+          <Tabs defaultValue={plan} className="mb-8" onValueChange={setPlan}>
             <TabsList className="grid w-full grid-cols-2 bg-white/5 border border-white/10 p-1 h-12 rounded-xl">
               <TabsTrigger value="free" className="rounded-lg font-bold data-[state=active]:bg-white/5 data-[state=active]:text-primary">Free</TabsTrigger>
               <TabsTrigger value="pro" className="rounded-lg font-bold data-[state=active]:bg-primary data-[state=active]:text-white data-[state=active]:glow-primary">Pro (Paid)</TabsTrigger>

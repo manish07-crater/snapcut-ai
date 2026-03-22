@@ -2,8 +2,6 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Check, Sparkles, Star } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import { initializeRazorpay, createPaymentOptions } from "@/lib/razorpay";
 
 const plans = [
   {
@@ -39,29 +37,6 @@ const plans = [
 ];
 
 const PricingSection = () => {
-  const { toast } = useToast();
-
-  const handlePayment = (plan: typeof plans[0]) => {
-    if (plan.price === "₹0") return;
-
-    // Convert price string like "₹499" to number 499
-    const amount = parseInt(plan.price.replace("₹", ""));
-
-    const options = createPaymentOptions(
-      amount,
-      plan.name,
-      plan.description,
-      (response: any) => {
-        toast({
-          title: "Payment Successful! 🎉",
-          description: `Welcome to ${plan.name}! Your transaction ID is ${response.razorpay_payment_id}`,
-        });
-      }
-    );
-
-    initializeRazorpay(options);
-  };
-
   return (
     <section id="pricing" className="relative py-32 overflow-hidden">
       {/* Background Orbs */}
@@ -131,9 +106,11 @@ const PricingSection = () => {
                   variant={plan.highlighted ? "hero" : "hero-outline"}
                   size="xl"
                   className="mb-8 w-full font-black rounded-2xl"
-                  onClick={() => handlePayment(plan)}
+                  asChild
                 >
-                  {plan.cta}
+                  <Link to="/register" state={{ defaultPlan: plan.name === "Enterprise" ? "free" : "pro" }}>
+                    {plan.cta}
+                  </Link>
                 </Button>
               )}
 
