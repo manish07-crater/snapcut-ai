@@ -1,12 +1,13 @@
 import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Upload, X, Download, Sparkles, Image as ImageIcon, Zap, AlertCircle, History, Clock, Trash2, CreditCard, Key, Settings } from "lucide-react";
+import { Upload, X, Download, Sparkles, Image as ImageIcon, Zap, AlertCircle, History, Clock, Trash2, CreditCard, Key, Settings, LayoutDashboard, TrendingUp, Timer, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { removeBackground } from "@imgly/background-removal";
+import { Link } from "react-router-dom";
 
 type HistoryItem = {
   id: string;
@@ -215,46 +216,161 @@ const Dashboard = () => {
     setProcessedPreview(null);
   };
 
+  const [activeTab, setActiveTab] = useState("dashboard");
+
+  const sidebarItems = [
+    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { id: "upload", label: "Upload", icon: Upload },
+    { id: "history", label: "History", icon: History },
+    { id: "billing", label: "Billing", icon: CreditCard },
+    { id: "apikeys", label: "API Keys", icon: Key },
+    { id: "settings", label: "Settings", icon: Settings },
+  ];
+
   return (
-    <div className="min-h-screen bg-mesh relative">
-      <Navbar />
+    <Tabs value={activeTab} onValueChange={setActiveTab} className="flex h-screen bg-[#070b14] text-white overflow-hidden font-sans">
+       {/* Sidebar */}
+       <aside className="w-64 bg-[#0a0e17] border-r border-white/5 flex flex-col hidden md:flex h-full flex-shrink-0">
+         <div className="px-6 py-8">
+           <Link to="/" className="flex items-center gap-2 mb-10 group">
+             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/20 text-primary transition-transform group-hover:rotate-12">
+               <Sparkles className="h-4 w-4" />
+             </div>
+             <span className="text-xl font-black tracking-tight text-white">Snapcut AI</span>
+           </Link>
 
-      {/* Background decoration */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[120px] -z-10" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-[120px] -z-10" />
+           <TabsList className="flex flex-col h-auto bg-transparent p-0 space-y-2 w-full items-start">
+             {sidebarItems.map(item => (
+               <TabsTrigger 
+                 key={item.id} 
+                 value={item.id} 
+                 className="w-full justify-start px-4 py-3 text-sm font-semibold rounded-xl text-muted-foreground data-[state=active]:bg-primary/10 data-[state=active]:text-primary transition-all hover:bg-white/5 hover:text-white"
+               >
+                 <item.icon className="h-4 w-4 mr-3" />
+                 {item.label}
+               </TabsTrigger>
+             ))}
+           </TabsList>
+         </div>
 
-      <div className="container pt-32 pb-16 relative z-10 text-center">
-        <div className="mx-auto max-w-5xl">
-          <Tabs defaultValue="upload" className="w-full">
-            <div className="flex justify-center mb-12 overflow-x-auto pb-4 -mb-4">
-              <TabsList className="bg-white/5 backdrop-blur-md border border-white/10 p-1 h-14 rounded-2xl flex-shrink-0">
-                <TabsTrigger value="upload" className="px-6 md:px-8 flex items-center gap-2 text-sm md:text-lg font-bold data-[state=active]:bg-primary data-[state=active]:text-white rounded-xl transition-all">
-                  <Upload className="h-4 w-4 md:h-5 md:w-5" />
-                  <span className="hidden sm:inline">Upload</span>
-                </TabsTrigger>
-                <TabsTrigger value="history" className="px-6 md:px-8 flex items-center gap-2 text-sm md:text-lg font-bold data-[state=active]:bg-primary data-[state=active]:text-white rounded-xl transition-all">
-                  <History className="h-4 w-4 md:h-5 md:w-5" />
-                  <span className="hidden sm:inline">History</span>
-                  {history.length > 0 && (
-                    <span className="ml-1 px-2 py-0.5 text-[10px] md:text-xs bg-white text-primary rounded-full">
-                      {history.length}
-                    </span>
-                  )}
-                </TabsTrigger>
-                <TabsTrigger value="billing" className="px-6 md:px-8 flex items-center gap-2 text-sm md:text-lg font-bold data-[state=active]:bg-primary data-[state=active]:text-white rounded-xl transition-all">
-                  <CreditCard className="h-4 w-4 md:h-5 md:w-5" />
-                  <span className="hidden sm:inline">Billing</span>
-                </TabsTrigger>
-                <TabsTrigger value="apikeys" className="px-6 md:px-8 flex items-center gap-2 text-sm md:text-lg font-bold data-[state=active]:bg-primary data-[state=active]:text-white rounded-xl transition-all">
-                  <Key className="h-4 w-4 md:h-5 md:w-5" />
-                  <span className="hidden lg:inline">API Keys</span>
-                </TabsTrigger>
-                <TabsTrigger value="settings" className="px-6 md:px-8 flex items-center gap-2 text-sm md:text-lg font-bold data-[state=active]:bg-primary data-[state=active]:text-white rounded-xl transition-all">
-                  <Settings className="h-4 w-4 md:h-5 md:w-5" />
-                  <span className="hidden lg:inline">Settings</span>
-                </TabsTrigger>
-              </TabsList>
-            </div>
+         <div className="mt-auto p-6">
+           <div className="bg-white/5 border border-white/10 rounded-2xl p-4 relative overflow-hidden group">
+              <div className="absolute top-0 right-0 p-2"><Sparkles className="h-8 w-8 text-primary/10" /></div>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="h-10 w-10 rounded-full bg-primary/20 text-primary flex items-center justify-center">
+                  <Sparkles className="h-5 w-5" />
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-white mb-0">Free Plan</p>
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">5 credits left</p>
+                </div>
+              </div>
+              <Button className="w-full gradient-cta glow-primary font-bold rounded-xl h-10" asChild>
+                <Link to="/pricing">Upgrade to Pro</Link>
+              </Button>
+           </div>
+         </div>
+       </aside>
+
+       {/* Main Content Area */}
+       <main className="flex-1 h-screen overflow-y-auto bg-[#070b14] relative">
+         <div className="p-8 md:p-12 max-w-6xl mx-auto min-h-full">
+           
+           {/* Mobile Header */}
+           <div className="md:hidden flex items-center justify-between mb-8 pb-4 border-b border-white/5">
+              <Link to="/" className="flex items-center gap-2">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/20 text-primary">
+                  <Sparkles className="h-4 w-4" />
+                </div>
+                <span className="text-xl font-black text-white">Snapcut AI</span>
+              </Link>
+              <select 
+                className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white outline-none"
+                value={activeTab}
+                onChange={(e) => setActiveTab(e.target.value)}
+              >
+                {sidebarItems.map(i => <option key={i.id} value={i.id} className="bg-[#070b14]">{i.label}</option>)}
+              </select>
+           </div>
+
+           <TabsContent value="dashboard" className="m-0 mt-0 h-full animate-in fade-in duration-500">
+             <div className="space-y-8">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                  <div className="glass-card p-6 rounded-2xl border-white/5">
+                    <div className="flex items-center gap-4 mb-4">
+                       <div className="p-3 rounded-lg bg-blue-500/10 text-blue-500"><ImageIcon className="h-5 w-5"/></div>
+                       <span className="text-xs font-bold text-green-500 bg-green-500/10 px-2 py-1 rounded-md ml-auto">+12%</span>
+                    </div>
+                    <h3 className="text-3xl font-bold">{history.length}</h3>
+                    <p className="text-sm text-muted-foreground">Images Processed</p>
+                  </div>
+                  <div className="glass-card p-6 rounded-2xl border-white/5">
+                    <div className="flex items-center gap-4 mb-4">
+                       <div className="p-3 rounded-lg bg-primary/10 text-primary"><Sparkles className="h-5 w-5"/></div>
+                    </div>
+                    <h3 className="text-3xl font-bold">5</h3>
+                    <p className="text-sm text-muted-foreground">Credits Remaining</p>
+                  </div>
+                  <div className="glass-card p-6 rounded-2xl border-white/5">
+                    <div className="flex items-center gap-4 mb-4">
+                       <div className="p-3 rounded-lg bg-blue-500/10 text-blue-500"><TrendingUp className="h-5 w-5"/></div>
+                       <span className="text-xs font-bold text-green-500 bg-green-500/10 px-2 py-1 rounded-md ml-auto">+8%</span>
+                    </div>
+                    <h3 className="text-3xl font-bold">{history.length}</h3>
+                    <p className="text-sm text-muted-foreground">This Month</p>
+                  </div>
+                  <div className="glass-card p-6 rounded-2xl border-white/5">
+                    <div className="flex items-center gap-4 mb-4">
+                       <div className="p-3 rounded-lg bg-indigo-500/10 text-indigo-500"><Timer className="h-5 w-5"/></div>
+                       <span className="text-xs font-bold text-green-500 bg-green-500/10 px-2 py-1 rounded-md ml-auto">-0.5s</span>
+                    </div>
+                    <h3 className="text-3xl font-bold">3.2s</h3>
+                    <p className="text-sm text-muted-foreground">Avg. Time</p>
+                  </div>
+                </div>
+
+                <h2 className="text-xl font-bold mt-8 mb-4">Quick Actions</h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="glass-card p-6 rounded-2xl border-white/5 hover:bg-white/5 cursor-pointer transition-colors" onClick={() => setActiveTab('upload')}>
+                    <div className="p-3 rounded-lg bg-blue-500/10 text-blue-500 w-fit mb-4"><Upload className="h-5 w-5"/></div>
+                    <h3 className="font-bold mb-1">Upload Image</h3>
+                    <p className="text-sm text-muted-foreground">Remove background from a new image</p>
+                  </div>
+                  <div className="glass-card p-6 rounded-2xl border-white/5 hover:bg-white/5 cursor-pointer transition-colors" onClick={() => setActiveTab('history')}>
+                    <div className="p-3 rounded-lg bg-cyan-500/10 text-cyan-500 w-fit mb-4"><History className="h-5 w-5"/></div>
+                    <h3 className="font-bold mb-1">View History</h3>
+                    <p className="text-sm text-muted-foreground">Access your recent processed images</p>
+                  </div>
+                  <div className="glass-card p-6 rounded-2xl border-white/5 hover:bg-white/5 cursor-pointer transition-colors" onClick={() => setActiveTab('apikeys')}>
+                    <div className="p-3 rounded-lg bg-purple-500/10 text-purple-500 w-fit mb-4"><Key className="h-5 w-5"/></div>
+                    <h3 className="font-bold mb-1">API Access</h3>
+                    <p className="text-sm text-muted-foreground">Generate API keys for integration</p>
+                  </div>
+                </div>
+
+                <h2 className="text-xl font-bold mt-8 mb-4">Recent Images</h2>
+                <div className="glass-card rounded-2xl border-white/5 overflow-hidden">
+                  <div className="grid grid-cols-12 gap-4 p-4 border-b border-white/5 text-sm font-semibold text-muted-foreground hidden md:grid">
+                    <div className="col-span-6">Image</div>
+                    <div className="col-span-3">Date</div>
+                    <div className="col-span-2">Status</div>
+                    <div className="col-span-1"></div>
+                  </div>
+                  {history.slice(0, 3).map(item => (
+                    <div key={item.id} className="grid grid-cols-1 md:grid-cols-12 gap-4 p-4 items-center border-b border-white/5 text-sm hover:bg-white/5 transition-colors">
+                      <div className="col-span-1 md:col-span-6 flex items-center gap-3">
+                         <div className="h-10 w-10 rounded-lg bg-black/20 flex-shrink-0 flex items-center justify-center border border-white/10 overflow-hidden"><img src={item.processedUrl} alt={item.originalName} className="w-full h-full object-contain" /></div>
+                         <span className="truncate max-w-[150px] md:max-w-[200px]">{item.originalName}</span>
+                      </div>
+                      <div className="col-span-1 md:col-span-3 text-muted-foreground text-xs md:text-sm">{new Date(item.timestamp).toLocaleDateString()}</div>
+                      <div className="col-span-1 md:col-span-2"><span className="text-[10px] md:text-xs px-2 py-1 rounded-full bg-green-500/10 text-green-500">completed</span></div>
+                      <div className="col-span-1 text-right"><Button variant="ghost" size="sm" onClick={() => handleDownload(item.processedUrl, item.originalName)}>Download</Button></div>
+                    </div>
+                  ))}
+                  {history.length === 0 && <div className="p-8 text-center text-muted-foreground">No recent images</div>}
+                </div>
+             </div>
+           </TabsContent>
 
             <TabsContent value="upload" className="mt-0 outline-none">
               <motion.div
@@ -467,11 +583,9 @@ const Dashboard = () => {
               </motion.div>
             </TabsContent>
 
-          </Tabs>
-        </div>
-      </div>
-      <Footer />
-    </div>
+         </div>
+       </main>
+    </Tabs>
   );
 };
 
